@@ -10,6 +10,7 @@ import java.util.Collections;
  * 
  * To play Powerball, you must select five numbers from a pool 
  * between 1 and 69 and one Powerball between 1 and 26. 
+ * 
  * The Powerball you select can be the same as one of the five main numbers. 
  * Rules taken from: https://www.powerball.net/rules
  */
@@ -76,13 +77,60 @@ public class Powerball
 	{	
 		Powerball winningCombo = new Powerball();
 		
-		System.out.println(winningCombo.getPowerballs());
+		System.out.println("The winning combo is " + winningCombo.getPowerballs());
 		
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < (int)Math.pow(10, 6); ++i)
 		{
 			Powerball random = new Powerball();
-			System.out.println(random.getPowerballs());
+			System.out.println(random.getPowerballs() + " " + 
+			winningCombo.getNumMatches(random));	
 		}
+		System.out.println(winningCombo.getPowerballs() + " " + winningCombo.getNumMatches(winningCombo));
+
+	}
+	
+	/**
+	 * Return the number of matches of a Powerball
+	 * with another Powerball.
+	 * 
+	 * If the Powerball matches, it will count 
+	 * as ten matches
+	 * @param compared The Powerball to be compared with
+	 * @return The number of matches
+	 */
+	public int getNumMatches(Powerball compared)
+	{
+		int counter = 0;
+		
+		// Checking if the Powerballs match
+		if (this.getBall(IDX_POWERBALL) == compared.getBall(IDX_POWERBALL))
+		{
+			counter += 10;
+		}
+		
+		// Counting the regular matches
+		int idxBall = 0;
+		int idxCompared = 0;
+		
+		while (idxBall < NUM_REGULAR_BALLS && idxCompared < NUM_REGULAR_BALLS)
+		{
+			if (this.getBall(idxBall) == compared.getBall(idxCompared))
+			{
+				++counter;
+				++idxBall;
+				++idxCompared;
+			}
+			else if (this.getBall(idxBall) > compared.getBall(idxCompared))
+			{
+				++idxCompared;
+			}
+			else
+			{
+				++idxBall;
+			}
+		}
+		
+		return counter;
 	}
 }
 
