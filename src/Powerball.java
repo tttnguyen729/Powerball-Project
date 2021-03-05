@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.util.Collections;
 
 /**
@@ -71,22 +69,6 @@ public class Powerball
 	public static int randomNumberGenerator(int max)
 	{
 		return (int)Math.ceil(Math.random() * max);
-	}
-	
-	public static void main(String[] args)
-	{	
-		Powerball winningCombo = new Powerball();
-		
-		System.out.println("The winning combo is " + winningCombo.getPowerballs());
-		
-		for (int i = 0; i < (int)Math.pow(10, 6); ++i)
-		{
-			Powerball random = new Powerball();
-			System.out.println(random.getPowerballs() + " " + 
-			winningCombo.getNumMatches(random));	
-		}
-		System.out.println(winningCombo.getPowerballs() + " " + winningCombo.getNumMatches(winningCombo));
-
 	}
 	
 	/**
