@@ -84,7 +84,7 @@ public class Powerball
 		
 		System.out.println("The winning combo is " + winningCombo.getPowerballs());
 		
-		final double NUM_ITERATIONS = Math.pow(10, 6);
+		final double NUM_ITERATIONS = Math.pow(10, 7);
 		int[] numMatches = new int[16];
 		for (int i = 0; i < (int)NUM_ITERATIONS; ++i)
 		{
@@ -98,7 +98,22 @@ public class Powerball
 		System.out.println();
 
 		printProbability(numMatches, NUM_ITERATIONS);
-
+		
+		
+		System.out.println("The difference between the actual and theoretical probabilities: ");
+		System.out.println(diffActualTheory(numMatches, 0, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 1, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 2, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 3, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 4, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 5, NUM_ITERATIONS));
+		
+		System.out.println(diffActualTheory(numMatches, 10, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 11, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 12, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 13, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 14, NUM_ITERATIONS));
+		System.out.println(diffActualTheory(numMatches, 15, NUM_ITERATIONS));
 	}
 	
 	public static void printProbability(int[] numMatches, double NUM_ITERATIONS) {
@@ -116,9 +131,15 @@ public class Powerball
 		System.out.println("The chance of getting three balls and the Powerball is " + numMatches[13] / NUM_ITERATIONS);
 		System.out.println("The chance of getting four balls and the Powerball is " + numMatches[14] / NUM_ITERATIONS);
 		System.out.println("The chance of getting five balls and the Powerball is " + numMatches[15] / NUM_ITERATIONS);
-
+		System.out.println();
 	}
 	
+	public static double diffActualTheory(int[] numMatches, int index, double NUM_ITERATIONS) {
+		double[] theory = {1.53, 3.68, 28.05, 579.76, 36525.17, 11688053.52, 
+				0.0, 0.0, 0.0, 0.0, 
+				3.68, 91.98, 701.33, 14494.11, 913129.18, 292201338};
+		return (numMatches[index] / NUM_ITERATIONS) - (1 / theory[index]);
+	}
 	/**
 	 * Return the number of matches of a Powerball
 	 * with another Powerball.
