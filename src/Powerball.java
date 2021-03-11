@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Collections;
@@ -32,11 +33,15 @@ public class Powerball
 	public Powerball()
 	{
 		powerballs = new ArrayList<Integer>(0);
+		int ball;
 
 		// Generating the regular balls		
 		while (powerballs.size() < NUM_REGULAR_BALLS)
-		{		
-			powerballs.add(randomNumberGenerator(MAX_REGULAR_VALUE));
+		{	
+			ball = randomNumberGenerator(MAX_REGULAR_VALUE);
+			if (!powerballs.contains(ball)) {
+				powerballs.add(ball);
+			}
 		}
 		
 		// Ordering the regular balls
@@ -79,13 +84,38 @@ public class Powerball
 		
 		System.out.println("The winning combo is " + winningCombo.getPowerballs());
 		
-		for (int i = 0; i < (int)Math.pow(10, 6); ++i)
+		final double NUM_ITERATIONS = Math.pow(10, 6);
+		int[] numMatches = new int[16];
+		for (int i = 0; i < (int)NUM_ITERATIONS; ++i)
 		{
 			Powerball random = new Powerball();
-			System.out.println(random.getPowerballs() + " " + 
-			winningCombo.getNumMatches(random));	
+//			System.out.println(random.getPowerballs() + " " + 
+//			winningCombo.getNumMatches(random));	
+			++numMatches[winningCombo.getNumMatches(random)];
 		}
-		System.out.println(winningCombo.getPowerballs() + " " + winningCombo.getNumMatches(winningCombo));
+		
+		System.out.println(Arrays.toString(numMatches));
+		System.out.println();
+
+		printProbability(numMatches, NUM_ITERATIONS);
+
+	}
+	
+	public static void printProbability(int[] numMatches, double NUM_ITERATIONS) {
+		System.out.println("The chance of getting no balls is " + numMatches[0] / NUM_ITERATIONS);
+		System.out.println("The chance of getting one ball is " + numMatches[1] / NUM_ITERATIONS);
+		System.out.println("The chance of getting two balls is " + numMatches[2] / NUM_ITERATIONS);
+		System.out.println("The chance of getting three balls is " + numMatches[3] / NUM_ITERATIONS);
+		System.out.println("The chance of getting four balls is " + numMatches[4] / NUM_ITERATIONS);
+		System.out.println("The chance of getting five balls is " + numMatches[5] / NUM_ITERATIONS);
+
+		System.out.println();
+		System.out.println("The chance of getting only the Powerball is " + numMatches[10] / NUM_ITERATIONS);
+		System.out.println("The chance of getting one ball and the Powerball is " + numMatches[11] / NUM_ITERATIONS);
+		System.out.println("The chance of getting two balls and the Powerball is " + numMatches[12] / NUM_ITERATIONS);
+		System.out.println("The chance of getting three balls and the Powerball is " + numMatches[13] / NUM_ITERATIONS);
+		System.out.println("The chance of getting four balls and the Powerball is " + numMatches[14] / NUM_ITERATIONS);
+		System.out.println("The chance of getting five balls and the Powerball is " + numMatches[15] / NUM_ITERATIONS);
 
 	}
 	
