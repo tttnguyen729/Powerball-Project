@@ -1,8 +1,10 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * A power ball simulator
@@ -84,7 +86,7 @@ public class Powerball
 		
 		System.out.println("The winning combo is " + winningCombo.getPowerballs());
 		
-		final double NUM_ITERATIONS = Math.pow(10, 7);
+		final double NUM_ITERATIONS = Math.pow(10, 3);
 		int[] numMatches = new int[16];
 		for (int i = 0; i < (int)NUM_ITERATIONS; ++i)
 		{
@@ -135,10 +137,38 @@ public class Powerball
 	}
 	
 	public static double diffActualTheory(int[] numMatches, int index, double NUM_ITERATIONS) {
-		double[] theory = {1.53, 3.68, 28.05, 579.76, 36525.17, 11688053.52, 
-				0.0, 0.0, 0.0, 0.0, 
-				3.68, 91.98, 701.33, 14494.11, 913129.18, 292201338};
-		return (numMatches[index] / NUM_ITERATIONS) - (1 / theory[index]);
+		HashMap<Integer, Integer> theories = new HashMap<Integer, Integer>();
+		
+		// The possible combinations of each matching configuration.
+		final double sampleSpace = 292201338;
+
+		// No Powerball
+		theories.put(0, 190612800);
+		theories.put(1, 79422000);
+		theories.put(2, 10416000);
+		theories.put(3, 504000);
+		theories.put(4, 8000);
+		theories.put(5, 25);
+		
+		// With Powerball
+		// The ones digit indicates number of regular balls
+		theories.put(10, 7624512);
+		theories.put(11, 3176880);
+		theories.put(12, 416640);
+		theories.put(13, 20160);
+		theories.put(14, 320);
+		theories.put(15, 1);
+		
+		/**
+		 * https://stackoverflow.com/questions/5920135/printing-hashmap-in-java
+		 */
+		for (Map.Entry<Integer, Integer> entry : theories.entrySet()) {
+			System.out.println("The chance of " + entry.getKey() + " is " + entry.getValue() / sampleSpace);
+		}
+
+
+		
+		return (numMatches[index] / NUM_ITERATIONS) - (theories.get(index) / sampleSpace);
 	}
 	/**
 	 * Return the number of matches of a Powerball
