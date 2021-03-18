@@ -61,11 +61,11 @@ public class Powerball
 		return powerballs;
 	}
 	
-/**
- * Get the ball at the given index.
- * @param idx The index of the ball
- * @return The ball at the given index
- */
+	/**
+	 * Get the ball at the given index.
+	 * @param idx The index of the ball
+	 * @return The ball at the given index
+	 */
 	public int getBall(int idx) {
 		return powerballs.get(idx);
 	}
@@ -82,66 +82,111 @@ public class Powerball
 	
 	public static void main(String[] args)
 	{	
-		Powerball winningCombo = new Powerball();
+		// The number of Powerball tickets to be generated.
+		final double NUM_ITERATIONS = Math.pow(10, 6);
 		
+		// Generate the winning combination.
+		Powerball winningCombo = new Powerball();
 		System.out.println("The winning combo is " + winningCombo.getPowerballs());
 		
-		final double NUM_ITERATIONS = Math.pow(10, 3);
-		int[] numMatches = new int[16];
+		// The hash map will keep track of the number of matches.
+		HashMap<Integer, Integer> numMatches = start();
+		int numMatch;
+		
+		// Generate NUM_ITERATIONS Powerball tickets and count the number of matches.
 		for (int i = 0; i < (int)NUM_ITERATIONS; ++i)
 		{
+			// Generate the random ticket.
 			Powerball random = new Powerball();
-//			System.out.println(random.getPowerballs() + " " + 
-//			winningCombo.getNumMatches(random));	
-			++numMatches[winningCombo.getNumMatches(random)];
+			
+			// Get the number of matches
+			numMatch = winningCombo.getNumMatches(random);
+		
+			// Increment the corresponding combination
+			numMatches.put(numMatch, numMatches.get(numMatch) + 1);
 		}
 		
-		System.out.println(Arrays.toString(numMatches));
-		System.out.println();
-
-		printProbability(numMatches, NUM_ITERATIONS);
+		printDashes("Printing the number of matches");   
+		for (Map.Entry<Integer, Integer> entry : numMatches.entrySet()) {
+			System.out.println("The number of matches for " + entry.getKey() + " is " + entry.getValue());
+		}
 		
+		printDashes("Printing the actual probability");
+		for (Map.Entry<Integer, Integer> entry : numMatches.entrySet()) {
+			System.out.println("The probability for " + entry.getKey() + " is " + entry.getValue() / NUM_ITERATIONS);
+		}
 		
-		System.out.println("The difference between the actual and theoretical probabilities: ");
-		System.out.println(diffActualTheory(numMatches, 0, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 1, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 2, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 3, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 4, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 5, NUM_ITERATIONS));
-		
-		System.out.println(diffActualTheory(numMatches, 10, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 11, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 12, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 13, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 14, NUM_ITERATIONS));
-		System.out.println(diffActualTheory(numMatches, 15, NUM_ITERATIONS));
-	}
-	
-	public static void printProbability(int[] numMatches, double NUM_ITERATIONS) {
-		System.out.println("The chance of getting no balls is " + numMatches[0] / NUM_ITERATIONS);
-		System.out.println("The chance of getting one ball is " + numMatches[1] / NUM_ITERATIONS);
-		System.out.println("The chance of getting two balls is " + numMatches[2] / NUM_ITERATIONS);
-		System.out.println("The chance of getting three balls is " + numMatches[3] / NUM_ITERATIONS);
-		System.out.println("The chance of getting four balls is " + numMatches[4] / NUM_ITERATIONS);
-		System.out.println("The chance of getting five balls is " + numMatches[5] / NUM_ITERATIONS);
-
-		System.out.println();
-		System.out.println("The chance of getting only the Powerball is " + numMatches[10] / NUM_ITERATIONS);
-		System.out.println("The chance of getting one ball and the Powerball is " + numMatches[11] / NUM_ITERATIONS);
-		System.out.println("The chance of getting two balls and the Powerball is " + numMatches[12] / NUM_ITERATIONS);
-		System.out.println("The chance of getting three balls and the Powerball is " + numMatches[13] / NUM_ITERATIONS);
-		System.out.println("The chance of getting four balls and the Powerball is " + numMatches[14] / NUM_ITERATIONS);
-		System.out.println("The chance of getting five balls and the Powerball is " + numMatches[15] / NUM_ITERATIONS);
-		System.out.println();
-	}
-	
-	public static double diffActualTheory(int[] numMatches, int index, double NUM_ITERATIONS) {
-		HashMap<Integer, Integer> theories = new HashMap<Integer, Integer>();
+		// Theoretical probability 
+		HashMap<Integer, Integer> theory = theoryProb();
 		
 		// The possible combinations of each matching configuration.
 		final double sampleSpace = 292201338;
+		
+		/**
+		 * Printing the theoretical probability
+		 * https://stackoverflow.com/questions/5920135/printing-hashmap-in-java
+		 */
+		printDashes("The theoretical probability");
+		for (Map.Entry<Integer, Integer> entry : theory.entrySet()) {
+			System.out.println("The chance of " + entry.getKey() + " is " + entry.getValue() / sampleSpace);
+		}		
+		
+		printDashes("The difference between actual and theoretical probability");
+		for (int entry : theory.keySet()) {
+			System.out.println("The difference in probability for " + entry + " is "
+					+ ((theory.get(entry) / sampleSpace) - numMatches.get(entry) / NUM_ITERATIONS));
+		}
+		
+		// Some sanity checks
+		// Adding the number of matches and ensure that it is equal to NUM_ITERATIONS
+		int totalTickets = 0;
+		for (Map.Entry<Integer, Integer> entry : numMatches.entrySet()) {
+			totalTickets += entry.getValue();
+		}
+		printDashes("The total number of tickets is " + totalTickets);
 
+		
+		// Adding the theoretical probabilities and ensure that is equal to 1
+		double sumProb = 0;
+		for (Map.Entry<Integer, Integer> entry : theory.entrySet()) {
+			sumProb += entry.getValue() / sampleSpace;
+		}		
+		printDashes("The total probability is " + sumProb);
+	}
+	
+	/**
+	 * Initialize the dictionary
+	 * @return
+	 */
+	public static HashMap<Integer, Integer> start() {
+		HashMap<Integer, Integer> numMatches = new HashMap<Integer, Integer>();
+		// No Powerball
+		numMatches.put(0, 0);
+		numMatches.put(1, 0);
+		numMatches.put(2, 0);
+		numMatches.put(3, 0);
+		numMatches.put(4, 0);
+		numMatches.put(5, 0);
+		
+		// With Powerball
+		// The ones digit indicates number of regular balls
+		numMatches.put(10, 0);
+		numMatches.put(11, 0);
+		numMatches.put(12, 0);
+		numMatches.put(13, 0);
+		numMatches.put(14, 0);
+		numMatches.put(15, 0);
+		
+		return numMatches;
+	}
+	
+	/**
+	 * Return the theoretical combinations. 
+	 * @return
+	 */
+	public static HashMap<Integer, Integer> theoryProb() {
+		HashMap<Integer, Integer> theories = new HashMap<Integer, Integer>();
+	
 		// No Powerball
 		theories.put(0, 190612800);
 		theories.put(1, 79422000);
@@ -159,17 +204,9 @@ public class Powerball
 		theories.put(14, 320);
 		theories.put(15, 1);
 		
-		/**
-		 * https://stackoverflow.com/questions/5920135/printing-hashmap-in-java
-		 */
-		for (Map.Entry<Integer, Integer> entry : theories.entrySet()) {
-			System.out.println("The chance of " + entry.getKey() + " is " + entry.getValue() / sampleSpace);
-		}
-
-
-		
-		return (numMatches[index] / NUM_ITERATIONS) - (theories.get(index) / sampleSpace);
+		return theories;
 	}
+	
 	/**
 	 * Return the number of matches of a Powerball
 	 * with another Powerball.
@@ -212,6 +249,18 @@ public class Powerball
 		}
 		
 		return counter;
+	}
+	
+	/**
+	 * Print the message with dashes
+	 * @param message
+	 */
+	public static void printDashes(String message) {
+		String dashes = "";
+		for (char c : message.toCharArray()) {
+			dashes += "-";
+		}
+		System.out.println("\n" + message + "\n" + dashes);
 	}
 }
 
