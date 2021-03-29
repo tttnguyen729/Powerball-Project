@@ -21,8 +21,7 @@ public class Powerball {
 	/** Generates a random Powerball ticket. */
 	public Powerball() {
 		powerballs = new ArrayList<Integer>(0); // Initialize the array.
-		while (powerballs.size() < NUM_REGULAR_BALLS)
-		{	
+		while (powerballs.size() < NUM_REGULAR_BALLS) {	
 			int ball = randomNumberGenerator(MAX_REGULAR_VALUE);
 			if (!powerballs.contains(ball)) {
 				powerballs.add(ball); // Ensure balls are unique.
@@ -33,28 +32,13 @@ public class Powerball {
 
 		powerballs.add(randomNumberGenerator(MAX_POWERBALL_VALUE)); // Generate the Powerball.
 	}
-	
-	/** Return the ArrayList of Powerballs. */
-	public ArrayList<Integer> getPowerballs() {
-		return powerballs;
-	}
-	
-	/** Return the ball at the given index. */
-	public int getBall(int idx) {
-		return powerballs.get(idx);
-	}
 
 	/** Generates a random integer from 1 to max. */
 	private static int randomNumberGenerator(int max) {
 		return (int)Math.ceil(Math.random() * max);
 	}
 
-	/**
-	 * Return the number of matches of a Powerball with another Powerball.
-	 * If the Powerball matches, it will count as ten matches
-	 * @param compared The Powerball to be compared with
-	 * @return The number of matches
-	 */
+	/** Return the number of matches of a Powerball with another Powerball. */
 	public int getNumMatches(Powerball compared) {
 		int counter = 0;
 		int idxBall = 0;
@@ -80,6 +64,16 @@ public class Powerball {
 			}
 		}
 		return counter;
+	}
+	
+	/** Return the ArrayList of Powerballs. */
+	public ArrayList<Integer> getPowerballs() {
+		return powerballs;
+	}
+	
+	/** Return the ball at the given index. */
+	public int getBall(int idx) {
+		return powerballs.get(idx);
 	}
 }
 
