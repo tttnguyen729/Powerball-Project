@@ -1,21 +1,15 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * A power ball simulator
+ * A Powerball simulator
  * @author Thomas Nguyen
- * @version 1.2
- * 
+ * @version 1.3
  * To play Powerball, you must select five numbers from a pool 
  * between 1 and 69 and one Powerball between 1 and 26. 
- * 
- * The Powerball you select can be the same as one of the five main numbers. 
- * Rules taken from: https://www.powerball.net/rules
+ * Rules adapted from: https://www.powerball.net/rules
  */
 public class Powerball 
 {
@@ -24,7 +18,7 @@ public class Powerball
 	private static final int NUM_BALLS = NUM_REGULAR_BALLS + NUM_POWER_BALLS;
 
 	private static final int IDX_POWERBALL = NUM_BALLS - 1;
-	private static final int MAX_REGULAR_VALUE= 69;
+	private static final int MAX_REGULAR_VALUE = 69;
 	private static final int MAX_POWERBALL_VALUE = 26;
 
 	private ArrayList<Integer> powerballs;
@@ -75,7 +69,7 @@ public class Powerball
 	 * @param max The maximum value a number can take.
 	 * @return The random number.
 	 */
-	public static int randomNumberGenerator(int max)
+	private static int randomNumberGenerator(int max)
 	{
 		return (int)Math.ceil(Math.random() * max);
 	}
@@ -160,23 +154,10 @@ public class Powerball
 	 */
 	public static HashMap<Integer, Integer> start() {
 		HashMap<Integer, Integer> numMatches = new HashMap<Integer, Integer>();
-		// No Powerball
-		numMatches.put(0, 0);
-		numMatches.put(1, 0);
-		numMatches.put(2, 0);
-		numMatches.put(3, 0);
-		numMatches.put(4, 0);
-		numMatches.put(5, 0);
-		
-		// With Powerball
-		// The ones digit indicates number of regular balls
-		numMatches.put(10, 0);
-		numMatches.put(11, 0);
-		numMatches.put(12, 0);
-		numMatches.put(13, 0);
-		numMatches.put(14, 0);
-		numMatches.put(15, 0);
-		
+		for (int i = 0; i < NUM_BALLS; ++i) {
+			numMatches.put(i, 0); // No Powerballs
+			numMatches.put(i + 10, 0); // Powerballs
+		}	
 		return numMatches;
 	}
 	
