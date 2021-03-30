@@ -3,7 +3,10 @@ import java.util.Map;
 
 public class Probability {
 	// The number of Powerball tickets to be generated.
-	final static double NUM_TICKETS = Math.pow(10, 6);
+	public final static double NUM_TICKETS = Math.pow(10, 6);
+	
+	// The possible combinations of each matching configuration.
+	public final static double SAMPLE_SPACE = 292201338;
 	
 	/** Initialize the dictionary */
 	public static HashMap<Integer, Integer> start() {
@@ -86,18 +89,15 @@ public class Probability {
 		// Theoretical probability 
 		HashMap<Integer, Integer> theory = theoryProb();
 		
-		// The possible combinations of each matching configuration.
-		final double sampleSpace = 292201338;
-		
 		printDashes("The theoretical probability");
 		for (Map.Entry<Integer, Integer> entry : theory.entrySet()) {
-			System.out.println("The chance of " + entry.getKey() + " is " + entry.getValue() / sampleSpace);
+			System.out.println("The chance of " + entry.getKey() + " is " + entry.getValue() / SAMPLE_SPACE);
 		}		
 		
 		printDashes("The difference between actual and theoretical probability");
 		for (int entry : theory.keySet()) {
 			System.out.println("The difference in probability for " + entry + " is "
-					+ ((theory.get(entry) / sampleSpace) - matches.get(entry) / NUM_TICKETS));
+					+ ((theory.get(entry) / SAMPLE_SPACE) - matches.get(entry) / NUM_TICKETS));
 		}
 		
 		// Adding the number of matches and ensure that it is equal to _ITERATIONS
@@ -113,6 +113,6 @@ public class Probability {
 		for (Map.Entry<Integer, Integer> entry : theory.entrySet()) {
 			sumProb += entry.getValue();
 		}		
-		printDashes("The sum of theoretical probabilities is " + sumProb / sampleSpace);
+		printDashes("The sum of theoretical probabilities is " + sumProb / SAMPLE_SPACE);
 	}
 }
